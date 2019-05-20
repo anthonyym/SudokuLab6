@@ -1,13 +1,14 @@
 package pkgGame;
 
 import static org.junit.Assert.*;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.junit.Test;
+
+import pkgEnum.eGameDifficulty;
 
 public class SudokuPrivateMethodsTest {
 
@@ -30,9 +31,9 @@ public class SudokuPrivateMethodsTest {
 
 		try {
 			Class<?> c = Class.forName("pkgGame.Sudoku");
-			Constructor constructor = c.getConstructor(new Class[] { int.class });
+			Constructor constructor = c.getConstructor(new Class[] { int.class, eGameDifficulty.class });
 			constructor.setAccessible(true);
-			s1 = (Sudoku) constructor.newInstance(iPuzzleSize);
+			s1 = (Sudoku) constructor.newInstance(iPuzzleSize, eGameDifficulty.EASY);
 
 			Method mSetRegion = c.getDeclaredMethod("SetRegion", new Class[] { int.class });
 
@@ -84,11 +85,11 @@ public class SudokuPrivateMethodsTest {
 		
 		try {
 			Class<?> c = Class.forName("pkgGame.Sudoku");
-			Constructor constructor = c.getConstructor(new Class[] { int.class });
+			Constructor constructor = c.getConstructor(new Class[] { int.class, eGameDifficulty.class });
 			constructor.setAccessible(true);
-			s1 = (Sudoku) constructor.newInstance(iPuzzleSize);
+			s1 = (Sudoku) constructor.newInstance(iPuzzleSize, eGameDifficulty.EASY);
 
-			Method mFillDiagonalRegions = c.getDeclaredMethod("FillDiagonalRegions", null);
+			Method mFillDiagonalRegions = c.getDeclaredMethod("FillDiagonalRegions");
 
 			PrintStars();
 			System.out.println("Testing method: " + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -99,7 +100,7 @@ public class SudokuPrivateMethodsTest {
 
 			System.out.println("Set Puzzle:");
 			mFillDiagonalRegions.setAccessible(true);
-			mFillDiagonalRegions.invoke(s1, null);
+			mFillDiagonalRegions.invoke(s1);
 
 			s1.PrintPuzzle();
 			System.out.println(Arrays.toString(s1.getRegion(0)));

@@ -71,8 +71,6 @@ public class Sudoku extends LatinSquare implements Serializable {
 	 * @param iSize- length of the width/height of the puzzle
 	 * @throws Exception if the iSize given doesn't have a whole number square root
 	 */
-	
- 
 	public Sudoku(int iSize, eGameDifficulty eGD) throws Exception {
 
 		this.iSize = iSize;
@@ -115,7 +113,6 @@ public class Sudoku extends LatinSquare implements Serializable {
 		} else {
 			throw new Exception("Invalid size");
 		}
-
 	}
 
 	/**
