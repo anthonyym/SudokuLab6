@@ -207,7 +207,17 @@ public class SudokuController implements Initializable {
 		
 		trashCan.getChildren().add(iv);
 		
-
+		trashCan.setOnDragDropped(new EventHandler<DragEvent>() {
+			public void handle(DragEvent event) {
+				Dragboard db = event.getDragboard();
+				boolean success = false;
+				if (db.hasContent(myTrashCanFormat)) {
+					Cell CellFrom = (Cell) db.getContent(myTrashCanFormat);
+				event.setDropCompleted(success);
+				event.consume();
+				}
+			}
+		});
 		
 		gridPaneNumbers.add(trashCan, s.getiSize() + 1, 0);
 		
@@ -327,44 +337,64 @@ public class SudokuController implements Initializable {
 
 				paneTarget.setOnDragDropped(new EventHandler<DragEvent>() {
 					public void handle(DragEvent event) {
-						Dragboard db = event.getDragboard();
-						boolean success = false;
-						Cell CellTo = (Cell) paneTarget.getCell();
+					Dragboard db = event.getDragboard();
+					boolean success = false;
+					boolean validDrop = true;
+					Cell CellTo = (Cell) paneTarget.getCell();
 
-						//TODO: This is where you'll find mistakes.  
-						//		Keep track of mistakes... as an attribute of Sudoku... start the attribute
-						//		at zero, and expose a AddMistake(int) method in Sudoku to add the mistake
-						//		write a getter so you can the value
-						//		Might even have a max mistake attribute in eGameDifficulty (easy has 2 mistakes, medium 4, etc)
-						//		If the number of mistakes >= max mistakes, end the game
-						if (db.hasContent(myFormat)) {
-							Cell CellFrom = (Cell) db.getContent(myFormat);
+					// TODO: This is where you'll find mistakes.
+					// Keep track of mistakes... as an attribute of Sudoku... start the attribute
+					// at zero, and expose a AddMistake(int) method in Sudoku to add the mistake
+					// write a getter so you can the value
+					// Might even have a max mistake attribute in eGameDifficulty (easy has 2
+					// mistakes, medium 4, etc)
+					// If the number of mistakes >= max mistakes, end the game
+					if (db.hasContent(myFormat)) {
+					Cell CellFrom = (Cell) db.getContent(myFormat);
 
-							if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
-								
-								//	Add a mistake
-								game.getSudoku().AddMistake();
-								BuildTopGrid();
-								
-								//TODO: Set the message for mistakes
-								if (game.getShowHints()) {
+					if (!s.isValidValue(CellTo.getiRow(), CellTo.getiCol(), CellFrom.getiCellValue())) {
 
-								}
-							}
+					// Add a mistake
+					game.getSudoku().AddMistake();
+					BuildTopGrid();
 
-							//	This is the code that is actually taking the cell value from the drag-from 
-							//	cell and dropping a new Image into the dragged-to cell
-							ImageView iv = new ImageView(GetImage(CellFrom.getiCellValue()));
-							paneTarget.getCell().setiCellValue(CellFrom.getiCellValue());
-							paneTarget.getChildren().clear();
-							paneTarget.getChildren().add(iv);
-							System.out.println(CellFrom.getiCellValue());
-							success = true;
-						}
-						event.setDropCompleted(success);
-						event.consume();
+					// TODO: Set the message for mistakes
+					if (game.getShowHints()) {
+
+					//if there is a value in the cellTo, then don't place
+					if(CellTo.getiCellValue() != 0) {
+
+					validDrop = false;
+
 					}
-				});
+					}
+					}
+
+					if(validDrop == true) {
+
+					// This is the code that is actually taking the cell value from the drag-from
+					// cell and dropping a new Image into the dragged-to cell
+					ImageView iv = new ImageView(GetImage(CellFrom.getiCellValue()));
+					paneTarget.getCell().setiCellValue(CellFrom.getiCellValue());
+					paneTarget.getChildren().clear();
+					paneTarget.getChildren().add(iv);
+					System.out.println(CellFrom.getiCellValue());
+
+					}
+
+					game.getSudoku().getPuzzle()[CellFrom.getiRow()][CellFrom.getiCol()] = CellFrom.getiCellValue();
+
+
+					success = true;
+					}
+					game.getSudoku().PrintPuzzle();
+
+					event.setDropCompleted(success);
+					event.consume();
+					}
+					});
+
+
 
 				gridPaneSudoku.add(paneTarget, iCol, iRow); // Add the pane to the grid
 				
