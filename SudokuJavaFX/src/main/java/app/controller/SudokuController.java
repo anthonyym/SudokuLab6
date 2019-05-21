@@ -62,7 +62,8 @@ public class SudokuController implements Initializable {
 
 	private int iCellSize = 45;
 	private static final DataFormat myFormat = new DataFormat("com.cisc181.Data.Cell");
-
+	private static final DataFormat myTrashCanFormat = new DataFormat("com.cisc181.TrashCan");
+	
 	private eGameDifficulty eGD = null;
 	private Sudoku s = null;
 
@@ -192,20 +193,7 @@ public class SudokuController implements Initializable {
 			//	Pay close attention... this is the method you must code to make your item draggable.
 			//	If you want a paneTarget draggable (so you can drag it into the trash), you'll have to 
 			//	implement a simliar method
-			paneSource.setOnDragDetected(new EventHandler<MouseEvent>() {
-				public void handle(MouseEvent event) {
-
-					/* allow any transfer mode */
-					Dragboard db = paneSource.startDragAndDrop(TransferMode.ANY);
-
-					/* put a string on dragboard */
-					// Put the Cell on the clipboard, on the other side, cast as a cell
-					ClipboardContent content = new ClipboardContent();
-					content.put(myFormat, paneSource.getCell());
-					db.setContent(content);
-					event.consume();
-				}
-			});
+			
 
 			// Add the pane to the grid
 			gridPaneNumbers.add(paneSource, iCol, 0);
@@ -218,6 +206,8 @@ public class SudokuController implements Initializable {
 		iv.setFitWidth(50);
 		
 		trashCan.getChildren().add(iv);
+		
+
 		
 		gridPaneNumbers.add(trashCan, s.getiSize() + 1, 0);
 		
@@ -288,7 +278,21 @@ public class SudokuController implements Initializable {
 						event.consume();
 					}
 				});
+				
+				paneTarget.setOnDragDetected(new EventHandler<MouseEvent>() {
+					public void handle(MouseEvent event) {
 
+						/* allow any transfer mode */
+						Dragboard db = paneTarget.startDragAndDrop(TransferMode.ANY);
+
+						/* put a string on dragboard */
+						// Put the Cell on the clipboard, on the other side, cast as a cell
+						ClipboardContent content = new ClipboardContent();
+						content.put(myTrashCanFormat, paneTarget.getCell());
+						db.setContent(content);
+						event.consume();
+					}
+				});
 				// Fire this method as something is entering the item being dragged
 				paneTarget.setOnDragEntered(new EventHandler<DragEvent>() {
 					public void handle(DragEvent event) {
