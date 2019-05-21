@@ -210,6 +210,17 @@ public class SudokuController implements Initializable {
 			// Add the pane to the grid
 			gridPaneNumbers.add(paneSource, iCol, 0);
 		}
+		
+		StackPane trashCan = new StackPane();
+		ImageView iv = new ImageView(GetTrash());
+		
+		iv.setFitHeight(50);
+		iv.setFitWidth(50);
+		
+		trashCan.getChildren().add(iv);
+		
+		gridPaneNumbers.add(trashCan, s.getiSize() + 1, 0);
+		
 		return gridPaneNumbers;
 	}
 
@@ -376,6 +387,11 @@ public class SudokuController implements Initializable {
 	}
 	private Image GetImage(int iValue) {
 		InputStream is = getClass().getClassLoader().getResourceAsStream("img/" + iValue + ".png");
+		return new Image(is);
+	}
+	
+	private Image GetTrash() {
+		InputStream is = getClass().getClassLoader().getResourceAsStream("img/trashcan.png");
 		return new Image(is);
 	}
 }
