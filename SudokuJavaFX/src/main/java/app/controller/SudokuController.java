@@ -226,11 +226,18 @@ public class SudokuController implements Initializable {
 				Dragboard db = event.getDragboard();
 				boolean success = false;
 				if (db.hasContent(myTrashCanFormat)) {
-
+					
 					Cell CellFrom = (Cell) db.getContent(myTrashCanFormat);
-					event.setDropCompleted(success);
+					System.out.println("* " + CellFrom.getiRow() + "," + CellFrom.getiCol() + "=" + CellFrom.getiCellValue());
+					game.getSudoku().getPuzzle()[CellFrom.getiRow()][CellFrom.getiCol()] = 0;
+					Cell CellFromAfter = (Cell) db.getContent(myTrashCanFormat);
+					System.out.println("+ " + CellFromAfter.getiRow() + "," + CellFromAfter.getiCol() + "=" + CellFromAfter.getiCellValue());
+					
+					event.setDropCompleted(true);
 					event.consume();
 					BuildGrids();
+					Cell CellFromAfter2 = (Cell) db.getContent(myTrashCanFormat);
+					System.out.println("x " + CellFromAfter2.getiRow() + "," + CellFromAfter2.getiCol() + "=" + CellFromAfter2.getiCellValue());
 				}
 			}
 		});
@@ -408,22 +415,21 @@ public class SudokuController implements Initializable {
 
 								// This is the code that is actually taking the cell value from the drag-from
 								// cell and dropping a new Image into the dragged-to cell
+								game.getSudoku().getPuzzle()[CellTo.getiRow()][CellTo.getiCol()] = CellFrom
+										.getiCellValue();
 								ImageView iv = new ImageView(GetImage(CellFrom.getiCellValue()));
 								paneTarget.getCell().setiCellValue(CellFrom.getiCellValue());
 								paneTarget.getChildren().clear();
 								paneTarget.getChildren().add(iv);
 								System.out.println(CellFrom.getiCellValue());
-
+								
 							}
-
-							game.getSudoku().getPuzzle()[CellFrom.getiRow()][CellFrom.getiCol()] = CellFrom
-									.getiCellValue();
 
 							success = true;
 						}
 						game.getSudoku().PrintPuzzle();
 
-						event.setDropCompleted(success);
+						event.setDropCompleted(true);
 						event.consume();
 					}
 				});
