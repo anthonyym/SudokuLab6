@@ -372,13 +372,30 @@ public class SudokuController implements Initializable {
 					// TODO: Set the message for mistakes
 					if (game.getShowHints()) {
 
+					//get the rows to test for duplicates
+					int[] col = game.getSudoku().getColumn(CellTo.getiCol());
+					int[] row = game.getSudoku().getRow(CellTo.getiCol());
+
+					//add new values to test
+					col[CellTo.getiCol()] = CellFrom.getiCellValue();
+					row[CellTo.getiRow()] = CellFrom.getiCellValue();
+
+					//if there are duplicates then don't let it drop
+					if(game.getSudoku().hasDuplicates(col) == true || game.getSudoku().hasDuplicates(row) == true) {
+
+					validDrop = false;
+
+					}
+
+
+					}
+					}
+
 					//if there is a value in the cellTo, then don't place
 					if(CellTo.getiCellValue() != 0) {
 
 					validDrop = false;
 
-					}
-					}
 					}
 
 					if(validDrop == true) {
@@ -404,6 +421,7 @@ public class SudokuController implements Initializable {
 					event.consume();
 					}
 					});
+
 
 
 
