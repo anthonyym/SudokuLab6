@@ -207,14 +207,25 @@ public class SudokuController implements Initializable {
 		
 		trashCan.getChildren().add(iv);
 		
+		trashCan.setOnDragOver(new EventHandler<DragEvent>() {
+			public void handle(DragEvent event) {
+				if (event.getGestureSource() != trashCan && event.getDragboard().hasContent(myTrashCanFormat)) {
+						event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+				}
+				event.consume();
+			}
+		});
+		
 		trashCan.setOnDragDropped(new EventHandler<DragEvent>() {
 			public void handle(DragEvent event) {
 				Dragboard db = event.getDragboard();
 				boolean success = false;
 				if (db.hasContent(myTrashCanFormat)) {
+					
 					Cell CellFrom = (Cell) db.getContent(myTrashCanFormat);
 				event.setDropCompleted(success);
 				event.consume();
+				BuildGrids();
 				}
 			}
 		});
